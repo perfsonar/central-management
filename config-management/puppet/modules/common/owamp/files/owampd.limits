@@ -1,0 +1,5 @@
+# default owamp mesh limits
+limit root with delete_on_fetch=on, bandwidth=0, disk=0, allow_open_mode=on
+limit regular with delete_on_fetch=on, bandwidth=10M, parent=root, disk=1074790400, allow_open_mode=on
+limit jail with bandwidth=1, parent=root, disk=1, allow_open_mode=off
+

@@ -1,0 +1,10 @@
+# Provides TCP syslog reception
+$ModLoad imtcp.so  
+$InputTCPServerRun 514
+
+# Log file name - hostname/programname
+$template FILENAME,"/var/log/central/%HOSTNAME%/%PROGRAMNAME%.log"
+
+# send all logs to FILENAME according to the above template
+*.* ?FILENAME
+

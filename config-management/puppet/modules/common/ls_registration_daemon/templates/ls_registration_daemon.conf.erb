@@ -1,0 +1,112 @@
+# puppet default ls registration config
+
+############################
+##Required host information
+
+##Hostname or IP address others can use to access your service
+external_address   <%= @fqdn %>
+
+##Primary interface on host
+external_address_if_name <%= primary_interface %>
+
+#############################
+
+#############################
+##Optional host information
+
+## Administrative domain of host in DNS format
+#domain mydomain.example
+
+## Primary IPv4 address to which external_address maps 
+#external_address_ipv4 10.1.1.1
+
+## Primary IPv6 address to which external_address maps 
+#external_address_ipv6 aaaa::bbbb:cccc:dddd:ffff
+#############################
+
+#############################
+##Optional Location information 
+
+## Name of site where host is running
+#site_name Acme Co.
+
+## A keyword identifying a project or community in which the host is involved
+## You may list multiple of these projects on separate lines.
+#site_project MyProject1
+#site_project MyProject2
+
+## City where host is running
+#city Berkeley
+
+## Two-letter abbreviation for State/Province/Region where host is running
+#region CA
+
+## Two-letter ISO country code for country where host is running 
+#country US
+
+## Postal code for location where host is running
+#zip_code 94720
+
+## Latitude for location here host is running
+#latitude 37.5
+
+## Longitude for location here host is running
+#longitude 121.7469
+#############################
+
+
+## The interval between service checks to see if a service is still running.
+check_interval		3600       # In seconds
+
+allow_internal_addresses     0
+disable_ipv6_reverse_lookup  1
+
+#<administrator>
+#    name      J. Admin
+#    email     admin@organization.edu
+#</administrator>
+
+<service_template local_latency_service>
+    autodiscover_addresses   1
+#   primary_address          eth0
+</service_template>
+
+<service_template local_bandwidth_service>
+    autodiscover_addresses   1
+#   primary_address          eth1
+</service_template>
+
+## List of services to register
+<site>
+    <host>
+        is_local                   1
+        autodiscover               1
+        autodiscover_interfaces    1
+
+        <service>
+            inherits local_latency_service
+            type     ping
+        </service>
+        <service>
+            inherits local_latency_service
+            type     traceroute
+        </service>
+        <service>
+            inherits local_latency_service
+            type     owamp
+        </service>
+        <service>
+            inherits local_bandwidth_service
+            type     bwctl
+        </service>
+        <service>
+            inherits local_bandwidth_service
+            type     ndt
+        </service>
+        <service>
+            inherits local_bandwidth_service
+            type     npad
+        </service>
+    </host>
+</site>
+
