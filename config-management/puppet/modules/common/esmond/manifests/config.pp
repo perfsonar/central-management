@@ -1,21 +1,37 @@
 class esmond::config {
-  file { "/etc/esmond/esmond.conf":
-    owner => "root",
-    group => "root",
-    mode => 444,
-    source => [ "puppet:///modules/esmond/esmond.conf-${esmond::mesh}",
-		"puppet:///modules/esmond/esmond.conf"],
-    require => Class["esmond::install"],
-    notify => Class["esmond::service"]
+  require perfsonar
+  file { [ "/opt/perfsonar_ps/puppet", "/opt/perfsonar_ps/puppet/scripts", "/opt/perfsonar_ps/puppet/status" ]:
+     ensure => directory,
+     before => File [ "/opt/perfsonar_ps/puppet/scripts/configure_esmond" ],
   }
 
-  file { "/etc/esmond/esmond.limits":
+  file { "/opt/perfsonar_ps/puppet/scripts/configure_esmond":
     owner => "root",
     group => "root",
-    mode => 444,
-    source => [ "puppet:///modules/esmond/esmond.limits-${esmond::mesh}",
-		"puppet:///modules/esmond/esmond.limits"],
+    mode => 544,
+    content => template("esmond/configure_esmond.erb"),
     require => Class["esmond::install"],
-    notify => Class["esmond::service"]
+    notify  => Class["esmond::service"]
   }
+  exec { "configure_esmond":
+    command => "/opt/perfsonar_ps/puppet/scripts/configure_esmond",
+    creates => "/opt/perfsonar_ps/puppet/status/configure_esmond_ran"
+  }
+
+  # TODO: Test once the default regular_testing config is updated
+  if $perfsonar::regular_testing {
+    file { "/opt/perfsonar_ps/puppet/scripts/configure_regular_testing":
+      owner => "root",
+      group => "root",
+      mode => 544,
+      content => template("esmond/configure_regular_testing.erb"),
+      require => Class["esmond::install"],
+      notify  => Class["esmond::service"]
+    }
+    exec { "configure_regular_testing":
+      command => "/opt/perfsonar_ps/puppet/scripts/configure_regular_testing",
+      creates => "/opt/perfsonar_ps/puppet/status/configure_regular_testing_ran"
+    }
+ }
+
 }

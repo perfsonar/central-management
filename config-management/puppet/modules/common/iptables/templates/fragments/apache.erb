@@ -1,0 +1,6 @@
+<% if @http %>
+-A perfSONAR -p tcp -m tcp --dport <%= @http_port %>  -m state --state NEW,ESTABLISHED -j ACCEPT
+<% end %>
+<% if @https %>
+-A perfSONAR -p tcp -m tcp --dport <%= @https_port %> -m state --state NEW,ESTABLISHED -j ACCEPT
+<% end %>

@@ -1,0 +1,43 @@
+#!/bin/bash
+
+#init postgres
+if [ -z "$(ls -A /var/lib/pgsql/data)" ]; then
+    /sbin/service postgresql initdb
+    /sbin/service postgresql start
+    echo "Waiting for postgresql to complete startup"
+    sleep 20
+    sudo -u postgres psql -c "CREATE USER <%= esmond_pg_username %> WITH PASSWORD '<%= esmond_pg_password %>'"
+    sudo -u postgres psql -c "CREATE DATABASE esmond"
+    sudo -u postgres psql -c "GRANT ALL ON DATABASE esmond to esmond"
+    cp -f /opt/perfsonar_ps/toolkit/etc/default_service_configs/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf
+    /sbin/service postgresql restart
+    sed -i "s/sql_db_name = .*/sql_db_name = esmond/g" /opt/esmond/esmond.conf
+    sed -i "s/sql_db_user = .*/sql_db_user = esmond/g" /opt/esmond/esmond.conf
+    sed -i "s/sql_db_password = .*/sql_db_password = <%= esmond_pg_password %>/g" /opt/esmond/esmond.conf
+fi
+
+#install esmond config
+cp -f /opt/perfsonar_ps/toolkit/etc/default_service_configs/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf
+
+#disable JMX in cassandra so will start even if /etc/sysconfig/network HOSTNAME does not resolve
+sed -i '/^JVM_OPTS="\$JVM_OPTS -Dcom.sun.management.jmx/ s/^/#/' /etc/cassandra/conf/cassandra-env.sh
+
+#set esmond env variables
+export ESMOND_ROOT=/opt/esmond
+export ESMOND_CONF=$ESMOND_ROOT/esmond.conf
+export DJANGO_SETTINGS_MODULE=esmond.settings
+
+#initialize python
+cd /opt/esmond
+source /opt/rh/python27/enable
+/opt/rh/python27/root/usr/bin/virtualenv --prompt="(esmond)" .
+. bin/activate
+
+#build esmond tables
+python esmond/manage.py syncdb --noinput
+
+#create api key
+KEY=`python esmond/manage.py add_ps_metadata_post_user perfsonar | grep "Key:" | cut -f2 -d " "`
+python esmond/manage.py add_timeseries_post_user perfsonar
+
+touch /opt/perfsonar_ps/puppet/status/configure_esmond_ran

@@ -1,10 +1,14 @@
 class owamp::service {
+  $servicestatus = $perfsonar::owamp ? {
+    true => "running",
+    default => "stopped"
+  }
   service { "owampd":
-    enable => true,
+    enable => $perfsonar::owamp,
     hasrestart => true,
     hasstatus => false,
     status    => "/bin/ps ax | grep -v grep | grep owampd",
-    ensure => running,
+    ensure => $servicestatus,
     require => Class["owamp::config"]
   }
 }

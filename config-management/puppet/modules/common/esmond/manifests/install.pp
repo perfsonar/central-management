@@ -1,5 +1,6 @@
-class owamp::install {
+class esmond::install {
   package { "esmond":
     ensure => latest
   }
+
 }

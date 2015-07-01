@@ -1,0 +1,8 @@
+#rsyslog-server
+<% if @rsyslog_tcp %>
+-A INPUT -p tcp -m tcp --dport <%= @rsyslog_tcp_port %> -j ACCEPT
+<% end %>
+<% if @rsyslog_udp %>
+-A INPUT -p udp -m udp --dport <%= @rsyslog_udp_port %> -j ACCEPT
+<% end %>
+

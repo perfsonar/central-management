@@ -1,8 +1,10 @@
 # rsyslog v5 configuration file
-# NOTE: edit the remote host at the bottom of the file
 
 # For more information see /usr/share/doc/rsyslog-*/rsyslog_conf.html
 # If you experience problems, see http://www.rsyslog.com/doc/troubleshoot.html
+
+# Use FQDN instead of short hostname
+$PreserveFQDN on
 
 #### MODULES ####
 
@@ -18,6 +20,9 @@ $ModLoad imklog   # provides kernel logging support (previously done by rklogd)
 #$ModLoad imtcp
 #$InputTCPServerRun 514
 
+# Turn off rate limiting
+$SystemLogRateLimitInterval 0
+$SystemLogRateLimitBurst 0
 
 #### GLOBAL DIRECTIVES ####
 
@@ -40,7 +45,16 @@ $IncludeConfig /etc/rsyslog.d/*.conf
 
 # Log anything (except mail) of level info or higher.
 # Don't log private authentication messages!
-*.info;mail.none;authpriv.none;cron.none                -/var/log/messages
+*.info;mail.none;authpriv.none;cron.none    		 -/var/log/messages
+
+
+#*.info;mail.none;authpriv.none;cron.none;local5.none    -/var/log/messages
+#local5.*						-/var/log/puppet.log
+#if $programname == 'puppet-agent' then -/var/log/puppet/puppet.log
+#& ~    
+#if $programname == 'puppet-master' then -/var/log/puppet/puppetmaster.log
+#& ~
+
 
 # The authpriv file has restricted access.
 authpriv.*                                              /var/log/secure
@@ -68,17 +82,32 @@ local7.*                                                /var/log/boot.log
 # forwarding rules, duplicate the whole block!
 # Remote Logging (we use TCP for reliable delivery)
 #
+
+<% if @server %>
 # An on-disk queue is created for this action. If the remote host is
 # down, messages are spooled to disk and sent when it is up again.
-#$WorkDirectory /var/lib/rsyslog # where to place spool files
-#$ActionQueueFileName fwdRule1 # unique name prefix for spool files
-#$ActionQueueMaxDiskSpace 1g   # 1gb space limit (use as much as possible)
-#$ActionQueueSaveOnShutdown on # save messages to disk on shutdown
-#$ActionQueueType LinkedList   # run asynchronously
-#$ActionResumeRetryCount -1    # infinite retries if host is down
+
+$WorkDirectory /var/lib/rsyslog # where to place spool files
+$ActionQueueFileName fwdRule1 # unique name prefix for spool files
+$ActionQueueMaxDiskSpace 1g   # 1gb space limit (use as much as possible)
+$ActionQueueSaveOnShutdown on # save messages to disk on shutdown
+$ActionQueueType LinkedList   # run asynchronously
+$ActionResumeRetryCount -1    # infinite retries if host is down
 
 # remote host is: name/ip:port, e.g. 192.168.0.1:514, port optional
-# FILL THIS IN:
-*.* @@<%= syslog_server %>:514
+# Using localhost for the server config, so it logs to itself
+#*.* @@127.0.0.1:514
+
+<% else %>
+
+# remote host is: name/ip:port, e.g. 192.168.0.1:514, port optional
+# @@host specifies TCP, @host for UDP
+<% if @tcp %>
+*.* @@<%= @server_host %>:<%= @tcp_port %>
+<% else %>
+*.* @<%= @server_host %>:<%= @udp_port %>
+<% end %>
+<% end %>
 
 # ### end of the forwarding rule ###
+

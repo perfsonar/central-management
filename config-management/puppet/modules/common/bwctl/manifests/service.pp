@@ -1,10 +1,14 @@
 class bwctl::service {
+ $servicestatus = $perfsonar::bwctl ? {
+    true => "running",
+    default => "stopped"
+  }
   service { "bwctld":
-    enable => true,
+    enable => $perfsonar::bwctl,
     hasrestart => true,
     hasstatus => false,
     status    => "/bin/ps ax | grep -v grep | grep bwctld",
-    ensure => running,
+    ensure => $servicestatus,
     require => Class["bwctl::config"]
   }
 }

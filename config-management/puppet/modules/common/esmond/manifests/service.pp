@@ -1,10 +1,15 @@
-# this probably needs to be Cassandra, really
 class esmond::service {
-  service { "esmond":
+  service { "cassandra":
     enable => true,
     hasrestart => true,
-    hasstatus => false,
-    status    => "/bin/ps ax | grep -v grep | grep esmond",
+    hasstatus => true,
+    ensure => running,
+    require => Class["esmond::config"]
+  }
+  service { "postgresql":
+    enable => true,
+    hasrestart => true,
+    hasstatus => true,
     ensure => running,
     require => Class["esmond::config"]
   }

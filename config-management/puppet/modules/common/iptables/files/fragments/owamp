@@ -1,0 +1,3 @@
+# OWAMP
+-A perfSONAR -m state --state NEW -m tcp -p tcp --dport 861 -j ACCEPT
+-A perfSONAR -m multiport -m udp -p udp --dports 8760-9960 -j ACCEPT

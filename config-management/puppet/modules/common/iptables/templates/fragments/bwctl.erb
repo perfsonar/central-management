@@ -1,0 +1,28 @@
+# bwctl
+-A perfSONAR -m state --state NEW -m tcp -p tcp --dport <%= bwctl_port %> -j ACCEPT
+
+# bwctl iperf ports
+-A perfSONAR -m udp -p udp --dport <%= bwctl_iperf_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m state --state NEW,ESTABLISHED -m tcp -p tcp --dport <%= bwctl_iperf_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m udp -p udp --dport <%= bwctl_iperf_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m state --state NEW,ESTABLISHED -m tcp -p tcp --dport <%= bwctl_iperf_ports.gsub(/-/, ":") %> -j ACCEPT
+
+# bwctl nuttcp ports
+-A perfSONAR -m udp -p udp --dport <%= bwctl_nuttcp_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m state --state NEW,ESTABLISHED -m tcp -p tcp --dport <%= bwctl_nuttcp_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m udp -p udp --dport <%= bwctl_nuttcp_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m state --state NEW,ESTABLISHED -m tcp -p tcp --dport <%= bwctl_nuttcp_ports.gsub(/-/, ":") %> -j ACCEPT
+
+# bwctl owamp ports
+-A perfSONAR -m udp -p udp --dport <%= bwctl_owamp_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m state --state NEW,ESTABLISHED -m tcp -p tcp --dport <%= bwctl_owamp_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m udp -p udp --dport <%= bwctl_owamp_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m state --state NEW,ESTABLISHED -m tcp -p tcp --dport <%= bwctl_owamp_ports.gsub(/-/, ":") %> -j ACCEPT
+
+# bwctl peer ports
+-A perfSONAR -m udp -p udp --dport <%= bwctl_peer_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m state --state NEW,ESTABLISHED -m tcp -p tcp --dport <%= bwctl_peer_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m udp -p udp --dport <%= bwctl_peer_ports.gsub(/-/, ":") %> -j ACCEPT
+-A perfSONAR -m state --state NEW,ESTABLISHED -m tcp -p tcp --dport <%= bwctl_peer_ports.gsub(/-/, ":") %> -j ACCEPT
+
+

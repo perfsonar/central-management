@@ -1,10 +1,28 @@
+# rsyslog server config from puppet
+
+<% if @tcp %>
 # Provides TCP syslog reception
 $ModLoad imtcp.so  
-$InputTCPServerRun 514
+$InputTCPServerRun <%= @tcp_port %>
+<% end %>
 
+<% if @udp %>
+# Provides UDP syslog reception
+$ModLoad imudp
+$UDPServerRun <%= @udp_port %>
+<% end %>
+
+# REMOTE RULES ##
+
+$template PerHostLog,"/var/log/central/%HOSTNAME%/%PROGRAMNAME%.log"
+#if $fromhost-ip != '127.0.0.1' then -?PerHostLog
+*.* 	?PerHostLog
+if $fromhost-ip != '127.0.0.1' then & ~
+
+# OLD remote rules
 # Log file name - hostname/programname
-$template FILENAME,"/var/log/central/%HOSTNAME%/%PROGRAMNAME%.log"
+#$template FILENAME,"/var/log/central/%HOSTNAME%/%PROGRAMNAME%.log"
 
 # send all logs to FILENAME according to the above template
-*.* ?FILENAME
+#*.* ?FILENAME
 
