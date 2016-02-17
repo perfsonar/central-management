@@ -1,5 +1,5 @@
 class ls_registration_daemon::config {
-  file { "/opt/perfsonar_ps/ls_registration_daemon/etc/ls_registration_daemon.conf":
+  file { "/etc/perfsonar/lsregistrationdaemon.conf":
     owner => "root",
     group => "root",
     mode => 444,
@@ -8,7 +8,7 @@ class ls_registration_daemon::config {
     notify => Class["ls_registration_daemon::service"]
   }
 
-  file { "/opt/perfsonar_ps/ls_registration_daemon/etc/ls_registration_daemon-logger.conf":
+  file { "/etc/perfsonar/lsregistrationdaemon-logger.conf":
     owner => "root",
     group => "root",
     mode => 444,

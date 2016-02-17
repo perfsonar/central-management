@@ -1,5 +1,5 @@
 class ls_registration_daemon::service {
-  service { "ls_registration_daemon":
+  service { "perfsonar-lsregistrationdaemon":
     enable => true,
     hasrestart => true,
     hasstatus => true,

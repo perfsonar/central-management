@@ -1,6 +1,6 @@
 class mesh_config::config {
   if $mesh_config::client {
-    file { "/opt/perfsonar_ps/mesh_config/etc/agent_configuration.conf":
+    file { "/etc/perfsonar/meshconfig-agent":
       owner => "root",
       group => "root",
       mode => 444,
@@ -11,7 +11,7 @@ class mesh_config::config {
 }
 
   if $mesh_config::server {
-    file { "/opt/perfsonar_ps/mesh_config/etc/mesh.conf":
+    file { "/etc/perfsonar/meshconfig-mesh.conf":
       owner => "root",
       group => "root",
       mode => 444,

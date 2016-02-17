@@ -1,6 +1,6 @@
 class bwctl::config {
   if ($perfsonar::bwctl) {
-    file { "/etc/bwctld/bwctld.conf":
+    file { "/etc/bwctl-server/bwctl-server.conf":
       owner => "root",
       group => "root",
       mode => 444,
@@ -10,7 +10,7 @@ class bwctl::config {
       notify => Class["bwctl::service"]
     }
   
-    file { "/etc/bwctld/bwctld.limits":
+    file { "/etc/bwctl-server/bwctl-server.limits":
       owner => "root",
       group => "root",
       mode => 444,
@@ -20,7 +20,7 @@ class bwctl::config {
       notify => Class["bwctl::service"]
     }
   
-    file { "/etc/bwctld/bwctld.keys":
+    file { "/etc/bwctl-server/bwctl-server.keys":
       owner => "root",
       group => "root",
       mode => 444,

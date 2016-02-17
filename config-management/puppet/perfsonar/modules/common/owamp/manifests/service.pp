@@ -3,7 +3,7 @@ class owamp::service {
     true => "running",
     default => "stopped"
   }
-  service { "owampd":
+  service { "owamp-server":
     enable => $perfsonar::owamp,
     hasrestart => true,
     hasstatus => false,

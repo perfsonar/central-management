@@ -1,6 +1,6 @@
 class regular_testing::config {
   # TODO: Templatize the regular testing configs and update to use esmond instead of psbuoy
-  file { "/opt/perfsonar_ps/regular_testing/etc/regular_testing.conf":
+  file { "/etc/perfsonar/regulartesting.conf":
     owner => "root",
     group => "root",
     mode => 444,
@@ -10,7 +10,7 @@ class regular_testing::config {
     notify => Class["regular_testing::service"]
   }
 
-  file { "/opt/perfsonar_ps/regular_testing/etc/regular_testing-logger.conf":
+  file { "/etc/perfsonar/regulartesting-logger.conf":
     owner => "root",
     group => "root",
     mode => 444,

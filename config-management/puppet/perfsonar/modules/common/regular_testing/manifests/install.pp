@@ -1,5 +1,5 @@
 class regular_testing::install {
-  package { "perl-perfSONAR_PS-RegularTesting":
+  package { "perfsonar-regulartesting":
     ensure => latest
   }
 

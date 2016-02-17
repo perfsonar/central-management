@@ -1,5 +1,5 @@
 class owamp::config {
-  file { "/etc/owampd/owampd.conf":
+  file { "/etc/owamp-server/owamp-server.conf":
     owner => "root",
     group => "root",
     mode => 444,
@@ -9,7 +9,7 @@ class owamp::config {
     notify => Class["owamp::service"]
   }
 
-  file { "/etc/owampd/owampd.limits":
+  file { "/etc/owamp-server/owamp-server.limits":
     owner => "root",
     group => "root",
     mode => 444,

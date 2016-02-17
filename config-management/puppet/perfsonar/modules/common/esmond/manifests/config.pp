@@ -1,11 +1,11 @@
 class esmond::config {
   require perfsonar
-  file { [ "/opt/perfsonar_ps/puppet", "/opt/perfsonar_ps/puppet/scripts", "/opt/perfsonar_ps/puppet/status" ]:
+  file { [ "/usr/lib/perfsonar/puppet", "/usr/lib/perfsonar/puppet/scripts", "/usr/lib/perfsonar/puppet/status" ]:
      ensure => directory,
-     before => File [ "/opt/perfsonar_ps/puppet/scripts/configure_esmond" ],
+     before => File [ "/usr/lib/perfsonar/puppet/scripts/configure_esmond" ],
   }
 
-  file { "/opt/perfsonar_ps/puppet/scripts/configure_esmond":
+  file { "/usr/lib/perfsonar/puppet/scripts/configure_esmond":
     owner => "root",
     group => "root",
     mode => 544,
@@ -14,13 +14,13 @@ class esmond::config {
     notify  => Class["esmond::service"]
   }
   exec { "configure_esmond":
-    command => "/opt/perfsonar_ps/puppet/scripts/configure_esmond",
-    creates => "/opt/perfsonar_ps/puppet/status/configure_esmond_ran"
+    command => "/usr/lib/perfsonar/puppet/scripts/configure_esmond",
+    creates => "/usr/lib/perfsonar/puppet/status/configure_esmond_ran"
   }
 
   # TODO: Test once the default regular_testing config is updated
   if $perfsonar::regular_testing {
-    file { "/opt/perfsonar_ps/puppet/scripts/configure_regular_testing":
+    file { "/usr/lib/perfsonar/puppet/scripts/configure_regular_testing":
       owner => "root",
       group => "root",
       mode => 544,
@@ -29,8 +29,8 @@ class esmond::config {
       notify  => Class["esmond::service"]
     }
     exec { "configure_regular_testing":
-      command => "/opt/perfsonar_ps/puppet/scripts/configure_regular_testing",
-      creates => "/opt/perfsonar_ps/puppet/status/configure_regular_testing_ran"
+      command => "/usr/lib/perfsonar/puppet/scripts/configure_regular_testing",
+      creates => "/usr/lib/perfsonar/puppet/status/configure_regular_testing_ran"
     }
  }
 

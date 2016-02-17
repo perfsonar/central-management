@@ -3,7 +3,7 @@ class bwctl::service {
     true => "running",
     default => "stopped"
   }
-  service { "bwctld":
+  service { "bwctl-server":
     enable => $perfsonar::bwctl,
     hasrestart => true,
     hasstatus => false,
